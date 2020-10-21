@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CSEClassFind</title>
+        
+        <script src="https://code.jQuery.com/jQuery-3.5.1.min.js"></script>
         <link rel = "stylesheet" href = "./style.css">
     </head>
     <body>
@@ -12,16 +14,28 @@
             <img src="resources/sbu_logo.png" width=120, height=99>
         </div>
         
-        <!--Search Bar-->
+        <!--Search Area-->
         <div class = "search">
             <div class="title">CSEClassFind</div>
             <form action = "">
                 <input type = "text", placeholder = "Search">
                 <button type = "submit"></button>
+                <br><label class = "filter">Filter by</label>
+                <select class = "fields">
+                    <option value = "all">All Fields</option>
+                    <option value = "title">Title</option>
+                    <option value = "class_num">Class Number</option>
+                    <option value = "day">Day</option>
+                    <option value = "time">Time</option>
+                </select>
             </form>
         </div>
         
         <!--Search Results-->
-        <div class = "results"></div>   
+        <div class = "results">
+            <table class = "all_courses"></table>
+        </div> 
+        
+        <script src = "./results.js"></script>
     </body>
 </html>
