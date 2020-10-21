@@ -106,9 +106,75 @@ for(let i = 0 ; i < allCourses.length; i++){
     $(".all_courses tr:eq("+i+")").append("<td class = course_name>" + allCourses[i][0] + allCourses[i][1]  + "." + allCourses[i][3] + "</td>");
     $(".all_courses tr:eq("+i+")").append("<td class = course_desc>" +
                                                 allCourses[i][18] +
-                                                "<p class = label><b>Class Type:</b> "+ allCourses[i][2] + "</p>" +
+                                                "<p class = label>" +
+                                                    "<b>Class Type: </b>"+ allCourses[i][2] + "&ensp;" + allCourses[i][10] + "&emsp;&emsp;&emsp;<b>Professor: </b>" + allCourses[i][13] +
+                                                    "<br><br><b>Days: </b>" + allCourses[i][4] + "&emsp;&emsp;&emsp;<b>Time: </b>" + allCourses[i][5] + "-" + allCourses[i][6] +
+                                                    "<br><br><b>Building: </b>" + allCourses[i][11] + "&emsp;&emsp;&emsp;<b>Room: </b>" + allCourses[i][12] +
+                                                    "<br><br><b>Starts: </b>" + allCourses[i][7] + "&emsp;&emsp;&emsp;<b>Ends: </b>" + allCourses[i][8] +
+                                                "</p>" +
                                           "</td>");
+    $(".all_courses tr:eq("+i+")").append("<td class = add_course>" +
+                                                "<button type = submit>ADD</button>" +
+                                            "</td>"); 
 }
-/*$(function(){
 
-});*/
+$('form').keypress(function(event) { 
+    return event.keyCode != 13;
+});
+
+searchOnEnter = (e) => {
+    if(e.keyCode == 13)
+        search();
+}
+
+search = () => {
+    let val = $(".search_box").val().trim();
+    let field = $(".fields").val();
+    if(val === "") return;
+
+    let filterby = (val, row) =>{
+        return containsTitle(val, row) || containsClassNum(val,row) || containsDay(val,row) || containsTime(val,row);
+    };
+
+    switch(field){
+        case "title":
+            filterby = containsTitle;
+            break;
+        case "class_num":
+            filterby = containsClassNum;
+            break;
+        case "day":
+            filterby = containsDay;
+            break;
+        case "time":
+            filterby = containsTime;
+            break;
+    }
+
+    for(let i = 0; i < allCourses.length; i++){
+        if(filterby(val, i)){
+            $(".all_courses tr:eq("+i+")").show();  
+        }
+        else{
+            $(".all_courses tr:eq("+i+")").hide();
+        }
+    }
+}
+
+
+containsTitle = (val, row) => {
+    return allCourses[row][18].toLowerCase().includes(val.toLowerCase());
+}
+
+containsClassNum = (val, row) => {
+    return allCourses[row][1].toLowerCase().includes(val.toLowerCase());
+}
+
+containsDay = (val, row) => {
+    return allCourses[row][4].toLowerCase().includes(val.toLowerCase());
+}
+
+containsTime = (val, row) => {
+    return allCourses[row][5].toLowerCase().includes(val.toLowerCase())
+           || allCourses[row][6].toLowerCase().includes(val.toLowerCase());
+}

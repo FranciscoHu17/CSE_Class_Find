@@ -10,7 +10,7 @@
 }
 
 .filter {
-	padding-left: 30px;
+	padding-left: 40px;
 	font-family: Georgia, "Times New Roman", Times, serif;
 }
 
@@ -27,10 +27,11 @@
 .search input[type="text"] {
 	padding: 5px;
 	margin-top: 50px;
-	font-size: 16px;
+	margin-left: 20px;
+	font-size: 15px;
 }
 
-.search button[type="submit"] {
+.search button[type="button"] {
 	position: relative;
 	top: -5px;
 	right: 5px;
@@ -49,6 +50,7 @@
 
 .all_courses {
 	margin: auto;
+	border-collapse: collapse;
 }
 
 .course_name {
@@ -61,11 +63,32 @@
 .course_desc {
 	text-align: center;
 	padding: 12px;
-	border: 2px solid black;
+	border-width: 2px;
+	border-style: solid none;
+	border-color: black;
 	font-size: 20px;
+}
+
+.add_course {
+	padding: 0px 50px;
+	border-width: 2px;
+	border-style: solid solid solid none;
+	border-color: black;
+}
+
+.add_course button[type="submit"] {
+	border: none;
+	background-color: #65b8fc;
+	font-size: 16px;
+	padding: 20px 40px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	cursor: pointer;
+}
+.add_course button[type="submit"]:hover {
+	background-color: #17609c;
 }
 
 .label {
 	text-align: left;
-	font-size: 15px;
+	font-size: 16px;
 }

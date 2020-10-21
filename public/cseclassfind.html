@@ -18,8 +18,8 @@
         <div class = "search">
             <div class="title">CSEClassFind</div>
             <form action = "">
-                <input type = "text", placeholder = "Search">
-                <button type = "submit"></button>
+                <input class = "search_box" type = "text" placeholder = "Search" onkeypress="searchOnEnter(event)">
+                <button type = "button" onclick = "search()"></button>
                 <br><label class = "filter">Filter by</label>
                 <select class = "fields">
                     <option value = "all">All Fields</option>
