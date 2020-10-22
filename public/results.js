@@ -114,7 +114,7 @@ for(let i = 0 ; i < allCourses.length; i++){
                                                 "</p>" +
                                           "</td>");
     $(".all_courses tr:eq("+i+")").append("<td class = add_course>" +
-                                                "<button type = submit>ADD</button>" +
+                                                "<button type = button>ADD</button>" +
                                             "</td>"); 
 }
 

@@ -8,7 +8,8 @@ app.get("/", (req,res) => {
     res.sendFile(path.join(__dirname, "/public/cseclassfind.html"));
 });
 
-
-// … Other "routes" go here"
+app.get("/schedule", (req,res) => {
+    res.sendFile(path.join(__dirname, "/public/schedule.html"));
+});
 port = process.env.PORT || 3000
 app.listen(port, () => { console.log("server started!")});
