@@ -101,6 +101,7 @@ course100 = ["CSE","645","SEM","S01","TH","11:30 AM","12:50 PM","25-Jan-21","19-
 allCourses = [course1,course2,course3,course4,course5,course6,course7,course8,course9,course10,course11,course12,course13,course14,course15,course16,course17,course18,course19,course20,course21,course22,course23,course24,course25,course26,course27,course28,course29,course30,course31,course32,course33,course34,course35,course36,course37,course38,course39,course40,course41,course42,course43,course44,course45,course46,course47,course48,course49,course50,course51,course52,course53,course54,course55,course56,course57,course58,course59,course60,course61,course62,course63,course64,course65,course66,course67,course68,course69,course70,course71,course72,course73,course74,course75,course76,course77,course78,course79,course80,course81,course82,course83,course84,course85,course86,course87,course88,course89,course90,course91,course92,course93,course94,course95,course96,course97,course98,course99,course100];
 
 
+
 for(let i = 0 ; i < allCourses.length; i++){
     $(".all_courses").append("<tr></tr>");
     $(".all_courses tr:eq("+i+")").append("<td class = course_name>" + allCourses[i][0] + allCourses[i][1]  + "." + allCourses[i][3] + "</td>");
@@ -114,9 +115,46 @@ for(let i = 0 ; i < allCourses.length; i++){
                                                 "</p>" +
                                           "</td>");
     $(".all_courses tr:eq("+i+")").append("<td class = add_course>" +
-                                                "<button type = button>ADD</button>" +
+                                                "<button id = "+i+" type = button>ADD</button>" +
                                             "</td>"); 
 }
+
+
+$(".add_course button").click(function () {
+        i = parseInt($(this).attr("id"));
+        code = allCourses[i][0] + allCourses[i][1];
+        title = allCourses[i][18];
+        classtype = allCourses[i][2];
+        professor = allCourses[i][13];
+        days = allCourses[i][4];
+        times = allCourses[i][5] + "-" + allCourses[i][6];
+        building = allCourses[i][11];
+        room = allCourses[i][12];
+
+        fetch('/schedule', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                course: {
+                    code: allCourses[i][0] + allCourses[i][1],
+                    title: allCourses[i][18],
+                    classtype: allCourses[i][2],
+                    professor: allCourses[i][13],
+                    days: allCourses[i][4],
+                    times: allCourses[i][5] + "-" + allCourses[i][6],
+                    building: allCourses[i][11],
+                    room: allCourses[i][12],
+                }
+            })
+        });
+       
+        location.href = "/schedule";
+});
+
+
+
 
 $('form').keypress(function(event) { 
     return event.keyCode != 13;
