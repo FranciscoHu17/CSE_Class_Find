@@ -134,10 +134,12 @@ $(".add_course button").click(function () {
         fetch('/schedule', {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
             },
             body: JSON.stringify({
                 course: {
+                    id: i,
                     code: allCourses[i][0] + allCourses[i][1],
                     title: allCourses[i][18],
                     classtype: allCourses[i][2],
@@ -148,6 +150,12 @@ $(".add_course button").click(function () {
                     room: allCourses[i][12],
                 }
             })
+        }).then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
         });
        
         location.href = "/schedule";

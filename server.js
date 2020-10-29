@@ -30,26 +30,43 @@ app.get("/", (req,res) => {
 
 app.get("/schedule", (req,res) => {
     res.sendFile(path.join(__dirname, "/public/schedule.html"));
-    var sql = "SELECT * FROM courseinfo";
-    con.query(sql, function (err, result,fields) {
-    if (err) throw err;
-        console.log(result);
-    });
 });
 
 app.post("/schedule", function (req, res) {
     course = req.body.course;
-    addCourse(course.code,course.title,course.classtype,course.professor,
+    //if(!conflictingTimes(course.days, course.times)){
+        /*addCourse(course.id, course.code,course.title,course.classtype,course.professor,
                 course.days, course.times,course.building,course.room);
+        */res.send(course);
+                //}
+    //else console.log("Cannot add course due to conflicting times");
 });
 
-addCourse = (code, title, classtype, professor, days, times, building, room) =>{
+addCourse = (id, code, title, classtype, professor, days, times, building, room) =>{
     var sql = "INSERT INTO courseinfo "+
-                  "VALUES (\'"+code+"\',\'"+title+"\',\'"+classtype+"\',\'"+professor+"\',\'"+days+"\',\'"+times+"\',\'"+building+"\',\'"+room+ "\')";
+                  "VALUES ("+id+ ",\'"  +code+"\',\'"+title+"\',\'"+classtype+"\',\'"+professor+"\',\'"+days+"\',\'"+times+"\',\'"+building+"\',\'"+room+ "\')";
         con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
+            if (err) console.log("Duplicate course");
+            else console.log("1 record inserted");
     });
+}
+
+conflictingTimes = (days, times) => {
+    var sql = "SELECT * FROM courseinfo";
+    con.query(sql, function (err, result,fields) {
+    if (err) throw err;
+        for(let i = 0; i < result.length;i++){
+            if(((days.includes("M") && result[i].Days.includes("M"))
+                || (days.includes("TU") && result[i].Days.includes("TU"))
+                || (days.includes("W") && result[i].Days.includes("W"))
+                || (days.includes("TH") && result[i].Days.includes("TH"))
+                || (days.includes("F") && result[i].Days.includes("F")))
+                    && (times === result[i].Times)){
+                        return true;
+                }
+        }
+    });
+    return false;
 }
 
 
