@@ -2,8 +2,10 @@ const express = require("express");
 const app = express();
 const path = require("path");
 var bodyParser = require('body-parser');
+var courses = [];
 
 var mysql = require('mysql');
+
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -15,7 +17,7 @@ con.connect(function(err) {
     console.log("Connected!");
     con.query("use cseclassfind", function (err, result) {
         if (err) throw err;
-        console.log("Using added_courses database");
+        console.log("Using courseinfo database");
     });
 });
 
@@ -28,6 +30,17 @@ app.get("/", (req,res) => {
     res.sendFile(path.join(__dirname, "/public/cseclassfind.html"));
 });
 
+app.post("/", (req,res) => {
+    addCoursesFromDB(function(err, initial){
+        if(err != null){
+            console.log(err);
+        }
+        else{
+            res.send(initial);
+        }
+    });
+});
+
 app.get("/schedule", (req,res) => {
     res.sendFile(path.join(__dirname, "/public/schedule.html"));
 });
@@ -35,11 +48,23 @@ app.get("/schedule", (req,res) => {
 app.post("/schedule", function (req, res) {
     course = req.body.course;
     //if(!conflictingTimes(course.days, course.times)){
-        /*addCourse(course.id, course.code,course.title,course.classtype,course.professor,
+    conflict = false;
+    conflictingTimes(course.days, course.times, function(err, isConflict){
+        if(err != null){
+            console.log("ERROR");
+        }
+        else{
+            if(!isConflict){
+                addCourse(course.id, course.code,course.title,course.classtype,course.professor,
                 course.days, course.times,course.building,course.room);
-        */res.send(course);
-                //}
-    //else console.log("Cannot add course due to conflicting times");
+                courses.push(course);
+                res.send(courses);
+            }
+            else{
+                console.log("Cannot add course due to conflicting times");
+            }
+        }
+    });    
 });
 
 addCourse = (id, code, title, classtype, professor, days, times, building, room) =>{
@@ -51,24 +76,37 @@ addCourse = (id, code, title, classtype, professor, days, times, building, room)
     });
 }
 
-conflictingTimes = (days, times) => {
-    var sql = "SELECT * FROM courseinfo";
-    con.query(sql, function (err, result,fields) {
-    if (err) throw err;
-        for(let i = 0; i < result.length;i++){
-            if(((days.includes("M") && result[i].Days.includes("M"))
-                || (days.includes("TU") && result[i].Days.includes("TU"))
-                || (days.includes("W") && result[i].Days.includes("W"))
-                || (days.includes("TH") && result[i].Days.includes("TH"))
-                || (days.includes("F") && result[i].Days.includes("F")))
-                    && (times === result[i].Times)){
-                        return true;
-                }
+addCoursesFromDB = (callback) => {
+    con.query("SELECT * FROM courseinfo", function (err, result) {
+        if (err)  callback(err, null);
+        initial = [];
+        for(let i = 0; i < result.length; i++){
+           initial.push(result[i]);
         }
+        callback(null,initial);
     });
-    return false;
 }
 
+conflictingTimes = (days, times, callback) => {
+    var sql = "SELECT * FROM courseinfo";
+    con.query(sql, function (err, result,fields) {
+    if (err) callback(err, null);
+        var bool = false;
+        for(let i = 0; i < result.length;i++){
+            if(((days.includes("M") && result[i].days.includes("M"))
+                || (days.includes("TU") && result[i].days.includes("TU"))
+                || (days.includes("W") && result[i].days.includes("W"))
+                || (days.includes("TH") && result[i].days.includes("TH"))
+                || (days.includes("F") && result[i].days.includes("F")))
+                    && (times === result[i].times)){ //MODIFY TO CHECK TIME OVERLAP
+                        bool = true;
+                        
+                }
+        }
+        callback(null, bool);
+    });
+    
+}
 
 
 port = process.env.PORT || 3000
