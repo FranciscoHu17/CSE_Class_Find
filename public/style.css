@@ -109,6 +109,7 @@
 }
 
 .timetable {
+	text-align: center;
 	margin: auto;
 	margin-top: 30px;
 	border: 2px solid black;
@@ -118,9 +119,14 @@
 .timetable th {
 	padding: 10px 20px;
 	border: 2px solid black;
+	color: #EEEEEE;
+    background-color: #494B4C;
 }
 
 .timetable td {
 	padding: 30px;
 	border: 2px solid black;
+	border-color: gray;
+    background-color: #C8E8F4;
 }
+

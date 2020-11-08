@@ -61,7 +61,7 @@ app.post("/schedule", function (req, res) {
                 res.send(courses);
             }
             else{
-                console.log("Cannot add course due to conflicting times");
+                console.log("Cannot add course due to conflict");
             }
         }
     });    
@@ -98,7 +98,7 @@ conflictingTimes = (days, times, callback) => {
                 || (days.includes("W") && result[i].days.includes("W"))
                 || (days.includes("TH") && result[i].days.includes("TH"))
                 || (days.includes("F") && result[i].days.includes("F")))
-                    && (times === result[i].times)){ //MODIFY TO CHECK TIME OVERLAP
+                    && timeOverlap(times,result[i].times)){ //MODIFY TO CHECK TIME OVERLAP
                         bool = true;
                         
                 }
@@ -106,6 +106,38 @@ conflictingTimes = (days, times, callback) => {
         callback(null, bool);
     });
     
+}
+
+timeOverlap = (time1, time2) =>{
+    time1Start = convertTimeStart(time1);
+    time1End = convertTimeEnd(time1);
+    time2Start = convertTimeStart(time2);
+    time2End = convertTimeEnd(time2);
+    if(time2Start >= time1Start && time2Start <= time1End){
+        return true;
+    }
+    if(time2End >= time1Start && time2End <= time1End){
+        return true;
+    }
+    if(time2Start <= time1Start && time2End >= time1End){
+        return true;
+    }
+
+    return false;
+}
+
+convertTimeStart = (time) =>{
+    hours = parseInt(time.substring(0,2));
+    if(hours == 12)
+        hours -= 12;
+    minutes = parseInt(time.substring(3,5));
+    if(time.substring(6,8) === "PM")
+        hours +=12;
+    return hours *60 +minutes;
+}
+
+convertTimeEnd = (time) => {
+    return convertTimeStart(time.substring(9));
 }
 
 
