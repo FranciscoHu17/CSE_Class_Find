@@ -14,8 +14,6 @@ addToSchedule = (course) =>{
     row++;   
     while(days.length > 0){
         currday = days.pop();
-        
-        console.log(currday);
         findAvailSpot(currday, course);
     }
 
@@ -53,11 +51,44 @@ findAvailSpot = (col, course) => {
                        "</p>");
             break;
         }
+        else{
+            start = pos.text().indexOf(":") - 2;
+            time1start = convertTimeStart(course.times);
+            time2start = convertTimeStart(pos.text().substring(start));
+            if(time1start<time2start){
+                content = pos.html();
+                pos.empty();
+                pos.append("<p><b>" + course.code + " " + course.classtype + "</b>" +
+                       "<br><br>" +course.times +
+                       "<br>" +course.professor +
+                       "<br>" +course.building +
+                       "<br>" +course.room +
+                       "</p>");
+                for(let j = i + 1; j < row; j++){
+                    pos = $(".timetable .row"+j+" .col"+col);
+                    con = pos.html();
+                    pos.empty();
+                    pos.append(content);
+                    content = con;
+                }
+                break;
+            }
+        }
     }
 }
 
+
+convertTimeStart = (time) =>{
+    hours = parseInt(time.substring(0,2));
+    if(hours == 12)
+        hours -= 12;
+    minutes = parseInt(time.substring(3,5));
+    if(time.substring(6,8) === "PM")
+        hours +=12;
+    return hours *60 +minutes;
+}
+
 for(let i = 0; i < sessionStorage.length; i++){
-    console.log(JSON.parse(sessionStorage.getItem(sessionStorage.key(i))));
     course = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)));   
     addToSchedule(course);
 }
