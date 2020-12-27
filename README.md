@@ -1,4 +1,4 @@
-# CSEClassFind
+# CSE_Class_Find
 
 This project was to simulate the process of adding CSE courses to a schedule.
 
