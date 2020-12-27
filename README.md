@@ -1,6 +1,6 @@
-# frhu_CSE316_HW4
+# CSEClassFind
 
-CSE Class Find:    
+Functionality:    
  * Able to search classes by field    
  * Able to add courses to your schedule    
  * Added courses are saved in a local MySQL database    
